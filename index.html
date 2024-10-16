@@ -127,41 +127,6 @@
         .carousel-buttons button:hover {
             background: #e65b50;
         }
-
-        /* Bildanimationer */
-        .floating-image {
-            position: absolute;
-            width: 150px; /* Ökad storlek */
-            height: 150px; /* Ökad storlek */
-            object-fit: cover;
-            border-radius: 10px;
-            opacity: 0;
-            transform: scale(0.5); /* Startar mindre */
-            animation: popUp 1s forwards, float 5s infinite;
-            cursor: grab;
-            transition: transform 0.3s ease;
-        }
-
-        .floating-image:hover {
-            transform: scale(1.2); /* Förstorar bilden vid hovring */
-        }
-
-        .floating-image:active {
-            cursor: grabbing;
-        }
-
-        @keyframes popUp {
-            to {
-                opacity: 1;
-                transform: scale(1); /* Skalar upp till normal storlek */
-            }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-10px) scale(1); }
-            100% { transform: translateY(0) scale(1); }
-        }
     </style>
 </head>
 <body>
@@ -226,39 +191,69 @@
                 mainContainer.style.display = 'none';
                 carouselContainer.classList.add('active');
                 currentSlide = 0; // Reset till första sliden
-                slides.forEach((slide, index) => {
-                    slide.classList.remove('active');
-                    if(index === currentSlide) {
-                        slide.classList.add('active');
-                    }
-                });
+                updateSlides();
+                updateNextButton();
             }, 500);
         });
 
-        // Funktion för att visa nästa slide
-        nextBtn.addEventListener('click', () => {
-            slides[currentSlide].classList.remove('active');
-            currentSlide++;
-            if (currentSlide < slides.length) {
-                slides[currentSlide].classList.add('active');
+        // Funktion för att uppdatera vilka slides som är aktiva
+        function updateSlides() {
+            slides.forEach((slide, index) => {
+                if(index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+        }
+
+        // Funktion för att uppdatera "Nästa" knappen
+        function updateNextButton() {
+            if (currentSlide === slides.length - 1) {
+                nextBtn.textContent = 'Börja om';
             } else {
-                // När sista sliden nås, börja om från första sliden
-                currentSlide = 0;
-                slides[currentSlide].classList.add('active');
+                nextBtn.textContent = 'Nästa';
+            }
+
+            // Dölj "Föregående" knappen på första sliden
+            if (currentSlide === 0) {
+                prevBtn.style.display = 'none';
+            } else {
+                prevBtn.style.display = 'inline-block';
+            }
+        }
+
+        // Funktion för att visa nästa slide eller återgå till start
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < slides.length - 1) {
+                slides[currentSlide].classList.remove('active');
+                currentSlide++;
+                updateSlides();
+                updateNextButton();
+            } else {
+                // När sista sliden nås och "Börja om" klickas
+                carouselContainer.classList.remove('active');
+                mainContainer.style.display = 'block';
+                setTimeout(() => {
+                    mainContainer.style.opacity = '1';
+                    mainContainer.style.transform = 'scale(1)';
+                }, 10); // Lite delay för att trigga CSS-transition
             }
         });
 
         // Funktion för att visa föregående slide
         prevBtn.addEventListener('click', () => {
-            slides[currentSlide].classList.remove('active');
-            currentSlide--;
-            if (currentSlide >= 0) {
-                slides[currentSlide].classList.add('active');
-            } else {
-                // Om vi är på första sliden, gå till sista sliden
-                currentSlide = slides.length - 1;
-                slides[currentSlide].classList.add('active');
+            if (currentSlide > 0) {
+                slides[currentSlide].classList.remove('active');
+                currentSlide--;
+                updateSlides();
+                updateNextButton();
             }
+        });
+
+        // Initial inställning: dölja "Föregående" knappen på första sliden
+        document.addEventListener('DOMContentLoaded', () => {
+            updateNextButton();
         });
     </script>
 </body>
