@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grattis på födelsedagen!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+            animation: fadeIn 2s ease-in-out;
+            position: relative;
+            z-index: 1;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        h1 {
+            color: #ff6f61;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        p {
+            color: #333;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        .heart {
+            color: #ff6f61;
+            font-size: 3em;
+            cursor: pointer;
+            transition: transform 0.3s;
+            animation: pulse 1.5s infinite;
+        }
+        .heart:hover {
+            transform: scale(1.2);
+        }
+        .confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            scale: 2;
+            opacity: 0.7;
+            animation: fall 3s linear infinite;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        @keyframes fall {
+            0% { top: -10%; left: calc(100% * var(--x)); opacity: 1; }
+            100% { top: 110%; left: calc(100% * var(--x)); opacity: 0; }
+        }
+
+        /* Karusellstilar */
+        .carousel-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 80%;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+            z-index: 2;
+            text-align: center;
+        }
+        .carousel-container.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .carousel-slide {
+            display: none;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .carousel-slide.active {
+            display: block;
+        }
+        .carousel-buttons {
+            margin-top: 20px;
+        }
+        .carousel-buttons button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            background: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .carousel-buttons button:hover {
+            background: #e65b50;
+        }
+
+        /* Bildanimationer */
+        .floating-image {
+            position: absolute;
+            width: 150px; /* Ökad storlek */
+            height: 150px; /* Ökad storlek */
+            object-fit: cover;
+            border-radius: 10px;
+            opacity: 0;
+            transform: scale(0.5); /* Startar mindre */
+            animation: popUp 1s forwards, float 5s infinite;
+            cursor: grab;
+            transition: transform 0.3s ease;
+        }
+
+        .floating-image:hover {
+            transform: scale(1.2); /* Förstorar bilden vid hovring */
+        }
+
+        .floating-image:active {
+            cursor: grabbing;
+        }
+
+        @keyframes popUp {
+            to {
+                opacity: 1;
+                transform: scale(1); /* Skalar upp till normal storlek */
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(1); }
+            100% { transform: translateY(0) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="confetti">
+        <!-- Skapar flera konfettibitar med slumpmässiga positioner -->
+        <div class="confetti-piece" style="--x:0.1; animation-delay: 0s;">♥️</div>
+        <div class="confetti-piece" style="--x:0.3; animation-delay: 0.5s;">♥️</div>
+        <div class="confetti-piece" style="--x:0.5; animation-delay: 1s;">♥️</div>
+        <div class="confetti-piece" style="--x:0.7; animation-delay: 1.5s;">♥️</div>
+        <div class="confetti-piece" style="--x:0.9; animation-delay: 2s;">♥️</div>
+        <!-- Du kan lägga till fler konfettibitar här -->
+    </div>
+    <div class="container" id="mainContainer">
+        <h1>Grattis på födelsedagen Hanna!</h1>
+        <p>Jag älskar dig så mycket. Klicka på hjärtat..</p>
+        <div class="heart" id="heart">❤️</div>
+    </div>
+    
+    <div class="carousel-container" id="carouselContainer">
+        <div class="carousel-slide active">
+            <h2>Jag älskar dig!</h2>
+            <p>Du må vara envis och vi är olika på många håll, men jag är så tacksam för allt du gör och för vem du är.</p>
+        </div>
+        <div class="carousel-slide">
+            <h2>Grattis på 20-årsdagen!</h2>
+            <p>Så fkn sjukt att du fyller 20🔥; en milstolpe verkligen och jag hoppas att vi kan fira den ordentligt♥️</p>
+        </div>
+        <div class="carousel-slide">
+            <h2>Tack för allt!</h2>
+            <p>Vårt syskonskap betyder världen för mig, även om vi inte kollar på filmer eller serier tillsammans🥲</p>
+        </div>
+        <div class="carousel-slide">
+            <h2>Vår familj må va sämst med födelsedagar..</h2>
+            <p>Men det säger ingenting om hur mycket vi älskar dig eller varandra♥️</p>
+        </div>
+        <div class="carousel-slide">
+            <h2>Litet tips!</h2>
+            <p>Visst du fyller 20, men stressa inte med livet. Ta vara på alla side quests du gör nu och njut♥️</p>
+        </div>
+
+        <div class="carousel-buttons">
+            <button id="prevBtn">Föregående</button>
+            <button id="nextBtn">Nästa</button>
+        </div>
+    </div>
+
+    <!-- Skript för att hantera karusellen och bildanimationer -->
+    <script>
+        const heart = document.getElementById('heart');
+        const mainContainer = document.getElementById('mainContainer');
+        const carouselContainer = document.getElementById('carouselContainer');
+        const slides = document.querySelectorAll('.carousel-slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentSlide = 0;
+
+        // Funktion för att öppna karusellen
+        heart.addEventListener('click', () => {
+            mainContainer.style.opacity = '0';
+            mainContainer.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                mainContainer.style.display = 'none';
+                carouselContainer.classList.add('active');
+                currentSlide = 0; // Reset till första sliden
+                slides.forEach((slide, index) => {
+                    slide.classList.remove('active');
+                    if(index === currentSlide) {
+                        slide.classList.add('active');
+                    }
+                });
+            }, 500);
+        });
+
+        // Funktion för att visa nästa slide
+        nextBtn.addEventListener('click', () => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide++;
+            if (currentSlide < slides.length) {
+                slides[currentSlide].classList.add('active');
+            } else {
+                // När sista sliden nås, börja om från första sliden
+                currentSlide = 0;
+                slides[currentSlide].classList.add('active');
+            }
+        });
+
+        // Funktion för att visa föregående slide
+        prevBtn.addEventListener('click', () => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide--;
+            if (currentSlide >= 0) {
+                slides[currentSlide].classList.add('active');
+            } else {
+                // Om vi är på första sliden, gå till sista sliden
+                currentSlide = slides.length - 1;
+                slides[currentSlide].classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
